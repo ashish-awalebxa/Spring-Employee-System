@@ -1,54 +1,55 @@
 package com.example.PayrollSys.entity;
 
-
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 
 @Entity
-@Table(name="attendance")
+@Table(
+        name = "attendance",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"emp_id", "date"})
+        }
+)
 public class Attendance {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private LocalDate date;
-    private boolean isPresent;
 
+    @Column(nullable = false)
+    private Boolean present;
 
-    @ManyToMany
-    @JoinColumn(name = "emp_id",nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "emp_id", nullable = false)
     private Employee employee;
 
-    public Attendance(){}
-
-    public Attendance(LocalDate date, boolean isPresent, Employee employee) {
-        this.date = date;
-        this.isPresent = isPresent;
-        this.employee = employee;
-    }
-
-    public boolean isPresent() {
-        return isPresent;
-    }
-
-    public LocalDate getDate() {
-        return date;
+    public Attendance() {
     }
 
     public Long getId() {
         return id;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public LocalDate getDate() {
+        return date;
     }
 
     public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public void setPresent(boolean present) {
-        isPresent = present;
+    public Boolean getPresent() {
+        return present;
+    }
+
+    public void setPresent(Boolean present) {
+        this.present = present;
+    }
+
+    public Employee getEmployee() {
+        return employee;
     }
 
     public void setEmployee(Employee employee) {

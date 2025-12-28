@@ -1,5 +1,6 @@
 package com.example.PayrollSys.entity;
 
+import com.example.PayrollSys.enums.Designation;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,26 +11,25 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
     private String name;
 
     private String department;
 
-    private String designation;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Designation designation;
 
     private int salary;
 
-    public Employee() {}
-
-    public Employee(String name, String department, String designation, int salary) {
-        this.name = name;
-        this.department = department;
-        this.designation = designation;
-        this.salary = salary;
+    public Employee() {
     }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -48,11 +48,11 @@ public class Employee {
         this.department = department;
     }
 
-    public String getDesignation() {
+    public Designation getDesignation() {
         return designation;
     }
 
-    public void setDesignation(String designation) {
+    public void setDesignation(Designation designation) {
         this.designation = designation;
     }
 
