@@ -8,11 +8,16 @@ public class PayslipResponse {
     private String month;
     private long presentDays;
     private int perDaySalary;
+    private int interviewIncentives;
     private int totalSalary;
 
-    public PayslipResponse(Long employeeId, String employeeName,
-                           String designation, String month,
-                           long presentDays, int perDaySalary,
+    public PayslipResponse(Long employeeId,
+                           String employeeName,
+                           String designation,
+                           String month,
+                           long presentDays,
+                           int perDaySalary,
+                           int interviewIncentives,
                            int totalSalary) {
         this.employeeId = employeeId;
         this.employeeName = employeeName;
@@ -20,6 +25,7 @@ public class PayslipResponse {
         this.month = month;
         this.presentDays = presentDays;
         this.perDaySalary = perDaySalary;
+        this.interviewIncentives = interviewIncentives;
         this.totalSalary = totalSalary;
     }
 
@@ -45,6 +51,10 @@ public class PayslipResponse {
 
     public int getPerDaySalary() {
         return perDaySalary;
+    }
+
+    public int getInterviewIncentives() {
+        return interviewIncentives;
     }
 
     public int getTotalSalary() {

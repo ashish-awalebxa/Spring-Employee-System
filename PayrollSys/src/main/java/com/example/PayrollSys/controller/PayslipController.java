@@ -4,6 +4,7 @@ import com.example.PayrollSys.dto.PayslipResponse;
 import com.example.PayrollSys.entity.Employee;
 import com.example.PayrollSys.repository.AttendanceRepository;
 import com.example.PayrollSys.repository.EmployeeRepository;
+import com.example.PayrollSys.repository.InterviewRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.YearMonth;
@@ -14,11 +15,14 @@ public class PayslipController {
 
     private final EmployeeRepository employeeRepository;
     private final AttendanceRepository attendanceRepository;
+    private final InterviewRepository interviewRepository;
 
     public PayslipController(EmployeeRepository employeeRepository,
-                             AttendanceRepository attendanceRepository) {
+                             AttendanceRepository attendanceRepository,
+                             InterviewRepository interviewRepository) {
         this.employeeRepository = employeeRepository;
         this.attendanceRepository = attendanceRepository;
+        this.interviewRepository = interviewRepository;
     }
 
     @GetMapping("/{empId}")
@@ -39,7 +43,19 @@ public class PayslipController {
                 );
 
         int perDaySalary = employee.getDesignation().getPerDaySalary();
-        int totalSalary = (int) presentDays * perDaySalary;
+
+        int interviewIncentives =
+                interviewRepository.findByEmployeeAndDateBetween(
+                                employee,
+                                yearMonth.atDay(1),
+                                yearMonth.atEndOfMonth()
+                        )
+                        .stream()
+                        .mapToInt(i -> i.getType().getIncentive())
+                        .sum();
+
+        int totalSalary =
+                (int) presentDays * perDaySalary + interviewIncentives;
 
         return new PayslipResponse(
                 employee.getId(),
@@ -48,6 +64,7 @@ public class PayslipController {
                 yearMonth.toString(),
                 presentDays,
                 perDaySalary,
+                interviewIncentives,
                 totalSalary
         );
     }
